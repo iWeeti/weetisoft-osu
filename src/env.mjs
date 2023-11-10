@@ -31,6 +31,8 @@ export const env = createEnv({
 
     // Redis
     REDIS_URL: z.string().url(),
+    GRAFANA_URL: z.string().url(),
+    GRAFANA_API_KEY: z.string(),
   },
 
   /**
@@ -59,6 +61,8 @@ export const env = createEnv({
     OSU_API_KEY: process.env.OSU_API_KEY,
     REDIS_URL: process.env.REDIS_URL,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    GRAFANA_URL: process.env.GRAFANA_URL,
+    GRAFANA_API_KEY: process.env.GRAFANA_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

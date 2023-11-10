@@ -57,7 +57,7 @@ export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
         <div className="flex-1"></div>
         <div className="flex flex-none items-center gap-2">
           <p className="text-sm text-muted-foreground">
-            {game.playerCount} players
+            {beatmap.source || "No source"}
           </p>
           <div className="h-4 w-px border border-muted-foreground"></div>
           <div className="flex items-center gap-1">

@@ -21,20 +21,24 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { trpc } from "~/utils/api";
+import { Card, Flex, LineChart, Text, Title, Tracker } from "@tremor/react";
 
 export function BaseLayout({ children }: { children: ReactNode }) {
   const { data, status } = useSession();
+  const { data: botStatus } = trpc.stats.connected.useQuery();
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <div className="border-b py-4 shadow">
         <nav className="container flex flex-none items-center justify-between gap-4 ">
-          <div>
+          <div className="flex items-center gap-10">
             <Link href="/" className="text-2xl font-bold tracking-tight">
-              WeetiSoft osu!
+              Auto Host Rotate
             </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/games">Games</Link>
+            <div className="flex items-center gap-4 text-muted-foreground">
+              <Link href="/games">Games</Link>
+              <Link href="/commands">Commands</Link>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <ModeToggle />
@@ -79,12 +83,67 @@ export function BaseLayout({ children }: { children: ReactNode }) {
       <div className="container flex-1 py-10">{children}</div>
       <footer className="flex-none border-t py-10">
         <div className="container flex justify-between gap-2 max-md:flex-col">
-          <p className="text-center text-sm">
-            Made with ❤️ by{" "}
-            <Link href="https://osu.ppy.sh/users/Weeti" className="underline">
-              iWeeti
-            </Link>
-          </p>
+          <div className="space-y-2 text-muted-foreground">
+            <p className="text-sm">
+              Made with ❤️ by{" "}
+              <Link
+                href="https://osu.ppy.sh/users/8332532"
+                className="underline"
+              >
+                iWeeti
+              </Link>
+            </p>
+            <p className="text-sm">
+              Bot by{" "}
+              <Link
+                href="https://osu.ppy.sh/users/10826852"
+                className="underline"
+              >
+                matte
+              </Link>
+              , source code on{" "}
+              <Link
+                href="https://github.com/matte-ek/BanchoMultiplayerBot"
+                className="underline"
+              >
+                GitHub
+              </Link>
+            </p>
+          </div>
+          <div>
+            {botStatus && (
+              <Card>
+                <Title>Bot Status Last 14 days</Title>
+                <Text>
+                  {botStatus.results.A.frames[0]?.data.values[1]?.[
+                    botStatus.results.A.frames[0]?.data.values[1].length - 1
+                  ] === 1
+                    ? "Connected"
+                    : "Disconnected"}
+                </Text>
+                <Tracker
+                  data={
+                    botStatus.results.A.frames[0]?.data.values[1]?.map(
+                      (d, i) => ({
+                        key: i,
+                        color: d > 0 ? "green" : "red",
+                        tooltip: `${
+                          d > 0 ? "Connected" : "Disconnected"
+                        } (${new Date(
+                          botStatus.results.A.frames[0]?.data.values[0]?.[i] ??
+                            0,
+                        ).toDateString()})`,
+                      }),
+                    ) ?? []
+                  }
+                  style={{
+                    width: "300px",
+                  }}
+                  className="mt-2"
+                />
+              </Card>
+            )}
+          </div>
           <div className="flex items-center gap-4 text-muted-foreground">
             <Link href="https://github.com/iWeeti">
               <GithubIcon className="h-6 w-6" />
