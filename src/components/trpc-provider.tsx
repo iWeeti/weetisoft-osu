@@ -6,6 +6,7 @@ import { useState } from "react";
 import superjson from "superjson";
 import { trpc } from "~/utils/api";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { env } from "~/env.mjs";
 
 export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -17,8 +18,8 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
       }),
   );
 
-  const url = process.env.NEXTAUTH_URL
-    ? `${process.env.NEXTAUTH_URL}`
+  const url = env.NEXT_PUBLIC_BASE_URL
+    ? `${env.NEXT_PUBLIC_BASE_URL}`
     : "http://localhost:3000/api/trpc/";
 
   const [trpcClient] = useState(() =>

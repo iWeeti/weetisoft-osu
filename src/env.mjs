@@ -40,6 +40,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_BASE_URL: z.string().url(),
   },
 
   /**
@@ -57,6 +58,7 @@ export const env = createEnv({
     OSU_CLIENT_SECRET: process.env.OSU_CLIENT_SECRET,
     OSU_API_KEY: process.env.OSU_API_KEY,
     REDIS_URL: process.env.REDIS_URL,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
