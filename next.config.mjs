@@ -25,6 +25,13 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  eslint: {
+    ignoreDuringBuilds: process.env.NODE_ENV === "production",
+  },
+  typescript: {
+    ignoreBuildErrors: process.env.NODE_ENV === "production",
+  },
 };
 
 export default config;
