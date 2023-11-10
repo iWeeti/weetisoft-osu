@@ -40,6 +40,11 @@ export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
           {beatmap.title}
         </Link>
         <time className="flex-none text-sm text-muted-foreground">
+          {new Intl.DateTimeFormat("en-US", {
+            dateStyle: "medium",
+            timeStyle: "medium",
+          }).format(new Date(game.time))}
+          {" • "}
           {new Intl.RelativeTimeFormat("en-US", {
             numeric: "auto",
           }).format(
