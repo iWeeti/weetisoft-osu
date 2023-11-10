@@ -113,26 +113,27 @@ export function BaseLayout({ children }: { children: ReactNode }) {
           <div>
             {botStatus && (
               <Card>
-                <Title>Bot Status Last 14 days</Title>
+                <Title>Bot Status Last 12 hours</Title>
                 <Text>
-                  {botStatus.results.A.frames[0]?.data.values[1]?.[
-                    botStatus.results.A.frames[0]?.data.values[1].length - 1
+                  {botStatus.results.connected?.frames[0]?.data.values[1]?.[
+                    botStatus.results.connected?.frames[0]?.data.values[1]
+                      .length - 1
                   ] === 1
                     ? "Connected"
                     : "Disconnected"}
                 </Text>
                 <Tracker
                   data={
-                    botStatus.results.A.frames[0]?.data.values[1]?.map(
+                    botStatus.results.A?.frames[0]?.data.values[1]?.map(
                       (d, i) => ({
                         key: i,
-                        color: d > 0 ? "green" : "red",
-                        tooltip: `${
-                          d > 0 ? "Connected" : "Disconnected"
-                        } (${new Date(
-                          botStatus.results.A.frames[0]?.data.values[0]?.[i] ??
+                        color: d >= 99 ? "green" : d >= 80 ? "yellow" : "red",
+                        tooltip: `${new Intl.NumberFormat("en-US", {
+                          style: "percent",
+                        }).format(d / 100)} (${new Date(
+                          botStatus.results.A?.frames[0]?.data.values[0]?.[i] ??
                             0,
-                        ).toDateString()})`,
+                        ).toLocaleString()})`,
                       }),
                     ) ?? []
                   }
