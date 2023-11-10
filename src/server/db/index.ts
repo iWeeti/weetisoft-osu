@@ -5,5 +5,6 @@ import { env } from "~/env.mjs";
 import * as schema from "./schema";
 
 // eslint-disable-next-line
-const sqlite = new Database(env.DATABASE_URL);
+const sqlite = new Database(env.DATABASE_URL, {});
+sqlite.pragma("journal_mode = WAL");
 export const db = drizzle(sqlite, { schema });
