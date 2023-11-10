@@ -1,109 +1,125 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
-  bigint,
-  index,
-  int,
-  mysqlTableCreator,
-  primaryKey,
+  integer,
+  sqliteTable,
   text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
-import { type AdapterAccount } from "next-auth/adapters";
+  primaryKey,
+} from "drizzle-orm/sqlite-core";
+import type { AdapterAccount } from "@auth/core/adapters";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const mysqlTable = mysqlTableCreator((name) => `weetisoft-osu_${name}`);
+export const games = sqliteTable("Games", {
+  id: integer("Id").notNull().primaryKey({ autoIncrement: true }),
+  beatmapId: integer("BeatmapId").notNull(),
+  playerCount: integer("PlayerCount").notNull(),
+  playerFinishCount: integer("PlayerFinishCount").notNull(),
+  playerPassedCount: integer("PlayerPassedCount").notNull(),
+  time: text("Time").notNull(),
+});
 
-export const posts = mysqlTable(
-  "post",
-  {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
+export const mapBans = sqliteTable("MapBans", {
+  id: integer("Id").notNull().primaryKey({ autoIncrement: true }),
+  beatmapSetId: integer("BeatmapSetId"),
+  beatmapId: integer("BeatmapId"),
+});
 
-export const users = mysqlTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    fsp: 3,
-  }).default(sql`CURRENT_TIMESTAMP(3)`),
-  image: varchar("image", { length: 255 }),
+export const playerBans = sqliteTable("PlayerBans", {
+  id: integer("Id").notNull().primaryKey({ autoIncrement: true }),
+  active: integer("Active", { mode: "boolean" }).notNull(),
+  userId: integer("UserId")
+    .notNull()
+    .references(() => users.userId, {
+      onDelete: "cascade",
+      onUpdate: "no action",
+    }),
+  reason: text("Reason"),
+  time: text("Time").notNull(),
+  expire: text("Expire"),
+  hostBan: integer("HostBan", { mode: "boolean" }).notNull(),
+});
+
+export const playerBansRelations = relations(playerBans, ({ one }) => ({
+  user: one(users, {
+    fields: [playerBans.userId],
+    references: [users.userId],
+  }),
+}));
+
+export const users = sqliteTable("Users", {
+  id: text("Id").notNull().primaryKey(),
+  userId: integer("UserId"),
+  name: text("Name").notNull(),
+  playtime: integer("Playtime").notNull(),
+  matchesPlayed: integer("MatchesPlayed").notNull(),
+  numberOneResults: integer("NumberOneResults").notNull(),
+  administrator: integer("Administrator", { mode: "boolean" })
+    .notNull()
+    .default(false),
+  autoSkipEnabled: integer("AutoSkipEnabled", { mode: "boolean" })
+    .notNull()
+    .default(false),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
+  playerBans: many(playerBans),
 }));
 
-export const accounts = mysqlTable(
+export const websiteUsers = sqliteTable("user", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name"),
+  email: text("email"),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image"),
+});
+
+export const accounts = sqliteTable(
   "account",
   {
-    userId: varchar("userId", { length: 255 }).notNull(),
-    type: varchar("type", { length: 255 })
-      .$type<AdapterAccount["type"]>()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    userId: text("userId")
+      .notNull()
+      .references(() => websiteUsers.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
     id_token: text("id_token"),
-    session_state: varchar("session_state", { length: 255 }),
+    session_state: text("session_state"),
   },
   (account) => ({
     compoundKey: primaryKey(account.provider, account.providerAccountId),
-    userIdIdx: index("userId_idx").on(account.userId),
-  })
+  }),
 );
 
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
+export const sessions = sqliteTable("session", {
+  sessionToken: text("sessionToken").notNull().primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => websiteUsers.id, { onDelete: "cascade" }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+});
 
-export const sessions = mysqlTable(
-  "session",
-  {
-    sessionToken: varchar("sessionToken", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("userId", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("userId_idx").on(session.userId),
-  })
-);
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
-
-export const verificationTokens = mysqlTable(
+export const verificationTokens = sqliteTable(
   "verificationToken",
   {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
   (vt) => ({
     compoundKey: primaryKey(vt.identifier, vt.token),
-  })
+  }),
+);
+
+export const __efMigrationsHistory = sqliteTable(
+  "__EFMigrationsHistory",
+  {
+    migrationId: text("MigrationId").notNull(),
+    productVersion: text("ProductVersion").notNull(),
+  },
+  (m) => ({
+    primary: primaryKey(m.migrationId),
+  }),
 );

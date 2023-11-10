@@ -8,6 +8,14 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
 
+  images: {
+    remotePatterns: [
+      {
+        hostname: "a.ppy.sh",
+      },
+    ],
+  },
+
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
    *

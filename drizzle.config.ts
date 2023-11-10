@@ -4,9 +4,9 @@ import { env } from "~/env.mjs";
 
 export default {
   schema: "./src/server/db/schema.ts",
-  driver: "mysql2",
+  out: "./drizzle",
+  driver: "better-sqlite",
   dbCredentials: {
-    connectionString: env.DATABASE_URL,
+    url: env.DATABASE_URL,
   },
-  tablesFilter: ["weetisoft-osu_*"],
 } satisfies Config;
