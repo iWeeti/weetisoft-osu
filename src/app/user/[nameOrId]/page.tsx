@@ -5,6 +5,8 @@ import { Separator } from "~/components/ui/separator";
 import { osuLegacy } from "~/lib/osu";
 import { db } from "~/server/db";
 
+export const revalidate = 60;
+
 export default async function ProfilePage({
   params,
 }: {

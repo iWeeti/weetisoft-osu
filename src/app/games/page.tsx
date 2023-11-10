@@ -2,6 +2,14 @@ import { db } from "~/server/db";
 import { GameEntry } from "./game-entry";
 import { desc } from "drizzle-orm";
 import { games } from "~/server/db/schema";
+import { type Metadata } from "next";
+
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "Games",
+  description: "View the latest games played by players",
+};
 
 export default async function GamesPage() {
   const entries = await db.query.games.findMany({
