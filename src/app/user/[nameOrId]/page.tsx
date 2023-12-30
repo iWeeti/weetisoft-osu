@@ -1,4 +1,4 @@
-import { BarList, Bold, Card, Flex, Text, Title } from "@tremor/react";
+import { BarList, Bold, Card, DonutChart, Flex, Text, Title } from "@tremor/react";
 import { desc, eq, sql } from "drizzle-orm";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
@@ -71,6 +71,7 @@ export default async function ProfilePage({
   if (!user) {
     notFound();
   }
+
   const rankCounts = await db.select({
     count: sql<number>`count(${scores.userId})`,
     rank: scores.rank
@@ -143,23 +144,34 @@ export default async function ProfilePage({
       <hr className="my-5" />
       <Card className="space-y-2">
         <Title>
-          Placement Distribution
+          Rank Distribution
         </Title>
-        <Flex>
-          <Text>
-            <Bold>Placement</Bold>
-          </Text>
-          <Text>
-            <Bold>Count</Bold>
-          </Text>
-        </Flex>
-        <BarList data={rankCounts.map((d) => ({
-          name: `#${d.rank}`,
-          value: d.count
-        }))} />
+        <DonutChart
+          data={rankCounts.map((d) => ({
+            name: getRankName(d.rank as any),
+            count: d.count
+          }))} 
+          index="name"
+          category="count"
+          colors={["gray", "red", "yellow", "green", "blue", "yellow", "sky"]}
+        />
       </Card>
       <hr className="my-5" />
       <UserTabs userId={user.id} />
     </div>
   );
+}
+
+const ranks = {
+  1: "F",
+  2: "D",
+  3: "C",
+  4: "B",
+  5: "A",
+  6: "S",
+  7: "SS"
+};
+
+function getRankName(rank: keyof typeof ranks): string {
+  return ranks?.[rank] ?? "N/A"
 }
