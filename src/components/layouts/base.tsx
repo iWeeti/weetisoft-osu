@@ -149,7 +149,7 @@ export function BaseLayout({ children }: { children: ReactNode }) {
             )}
           </div>
           <div className="flex items-center gap-4 text-muted-foreground">
-            <Link href="https://github.com/iWeeti">
+            <Link href="https://github.com/iWeeti/weetisoft-osu">
               <GithubIcon className="h-6 w-6" />
             </Link>
           </div>
