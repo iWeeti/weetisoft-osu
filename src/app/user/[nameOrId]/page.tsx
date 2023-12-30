@@ -7,6 +7,7 @@ import { osuLegacy } from "~/lib/osu";
 import { db } from "~/server/db";
 import { scores } from "~/server/db/schema";
 import { UserTabs } from "./tabs";
+import Link from "next/link";
 
 export const revalidate = 0;
 
@@ -102,8 +103,7 @@ export default async function ProfilePage({
 
   return (
     <div>
-      <div className="flex items-center gap-5">
-
+      <Link href={`https://osu.ppy.sh/user/${osuUser.user_id}`} className="flex items-center gap-5">
         <Image
           src={`https://a.ppy.sh/${osuUser.user_id}?.png`}
           width={64}
@@ -111,7 +111,7 @@ export default async function ProfilePage({
           alt={osuUser.username}
         />
         <h1 className="text-2xl font-bold tracking-tight">{osuUser.username}</h1>
-      </div>
+      </Link>
       <hr className="my-5" />
       <div className="flex items-center gap-5 max-md:flex-col max-md:items-stretch">
         <div className="h-24 md:w-1/3 space-y-1 rounded-sm bg-secondary p-3">
