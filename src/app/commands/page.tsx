@@ -69,7 +69,7 @@ const commands: {
         aliases: ["pt"],
       },
       {
-        name: "ps",
+        name: "playstats",
         description: "Shows your total matches played and #1's",
         aliases: ["ps"],
       },
@@ -83,9 +83,9 @@ const commands: {
         description: "Shows information about your most recent score.",
       },
       {
-        name: "timeleft",
+        name: "timeleft [ping]",
         description:
-          "Shows the estimated time left of the current map, useful if you joined during an ongoing match.",
+          "Shows the estimated time left of the current map. You may also choose to get notified when the match finishes.",
       },
       {
         name: "autoskip",
@@ -96,6 +96,10 @@ const commands: {
       {
         name: "mirror",
         description: "Sends a download link to the map from a mirror.",
+      },
+      {
+        name: "mplink",
+        description: "Sends a link to the osu! match history."
       },
       {
         name: "help",
