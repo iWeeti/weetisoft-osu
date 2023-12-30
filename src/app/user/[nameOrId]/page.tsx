@@ -103,7 +103,7 @@ export default async function ProfilePage({
 
   return (
     <div>
-      <Link href={`https://osu.ppy.sh/user/${osuUser.user_id}`} className="flex items-center gap-5">
+      <Link href={`https://osu.ppy.sh/users/${osuUser.user_id}`} className="flex items-center gap-5">
         <Image
           src={`https://a.ppy.sh/${osuUser.user_id}?.png`}
           width={64}
