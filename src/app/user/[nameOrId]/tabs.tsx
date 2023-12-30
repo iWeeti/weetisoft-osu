@@ -1,11 +1,10 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { StarIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { trpc } from "~/utils/api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { trpc } from "~/utils/api";
 
 export function UserTabs({ userId }: { userId: number }) {
     const [tab, setTab] = useState<string>("top-5");

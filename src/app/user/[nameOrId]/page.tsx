@@ -3,8 +3,6 @@ import { desc, eq, sql } from "drizzle-orm";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { BaseLayout } from "~/components/layouts/base";
-import { Separator } from "~/components/ui/separator";
 import { osuLegacy } from "~/lib/osu";
 import { db } from "~/server/db";
 import { scores } from "~/server/db/schema";

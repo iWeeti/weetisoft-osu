@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { desc } from "drizzle-orm";
-import { scores } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
+import { desc } from "drizzle-orm";
+import { z } from "zod";
+import { scores } from "~/server/db/schema";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   stats: protectedProcedure.query(async ({ ctx }) => {

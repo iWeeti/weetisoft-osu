@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from "react";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
-import { Button } from "./ui/button";
 import { SearchIcon } from "lucide-react";
+import { useState } from "react";
 import { trpc } from "~/utils/api";
+import { Button } from "./ui/button";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
 
 export function UserSearch() {
     const [open, setOpen] = useState(false);

@@ -1,9 +1,19 @@
 "use client";
 
+import { Card, Text, Title, Tracker } from "@tremor/react";
+import {
+  GithubIcon,
+  LogInIcon,
+  LogOutIcon,
+  UserCircleIcon,
+} from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { type ReactNode } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ModeToggle } from "~/components/mode-toggle";
+import { trpc } from "~/utils/api";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,16 +23,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import {
-  GithubIcon,
-  LogInIcon,
-  LogOutIcon,
-  UserCircleIcon,
-} from "lucide-react";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import { trpc } from "~/utils/api";
-import { Card, Flex, LineChart, Text, Title, Tracker } from "@tremor/react";
 import { UserSearch } from "../user-search";
 
 export function BaseLayout({ children }: { children: ReactNode }) {
