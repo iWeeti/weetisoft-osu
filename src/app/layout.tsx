@@ -5,15 +5,17 @@ import { Providers } from "./providers";
 
 import "~/styles/globals.css";
 import { BaseLayout } from "~/components/layouts/base";
+import { Metadata } from "next";
 
 const inter = Inter({
   subsets: ["latin-ext"],
   weight: ["400", "700"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Auto Host Rotate",
   description: "osu! Auto Host Rotation multiplayer lobbies.",
+  icons: ["/AHR.png"]
 };
 
 export default function RootLayout({
