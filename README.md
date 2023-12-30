@@ -14,7 +14,7 @@ Run `npm install` to install the dependencies.
 
 Copy the `.env.example` file to `.env` and configure it.
 
-Run `npm build` to build the production build.
+Run `npm run build` to build the production build.
 
 Run `npm start` to start the website.
 
