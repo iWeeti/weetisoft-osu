@@ -1,28 +1,31 @@
-# Create T3 App
+# Bancho Multiplayer Bot Statistics Website
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Website for checking user statistics etc. for the Bancho Multiplayer Bot.
 
-## What's next? How do I make an app with this?
+### Requirements
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- [Bancho Multiplayer Bot](https://github.com/matte-ek/BanchoMultiplayerBot) by [matte-ek](https://github.com/matte-ek)
+- [NodeJS](https://nodejs.org)  18 or higher
+- [Redis](https://redis.io) server
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### Installation
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Run `npm install` to install the dependencies.
 
-## Learn More
+Copy the `.env.example` file to `.env` and configure it.
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Run `npm build` to build the production build.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+Run `npm start` to start the website.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+You can use `PORT=1665 npm start` to change the port the website runs on.
 
-## How do I deploy this?
+### About
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Built with [Next.JS](https://nextjs.org) with [T3](https://create.t3.gg) template.
+
+Authentication with [NextAuth](https://next-auth.js.org/).
+
+Component libraries:
+- [ShadcnUI](https://ui.shadcn.com)
+- [Tremor](https://tremor.so)

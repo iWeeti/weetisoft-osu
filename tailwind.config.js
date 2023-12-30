@@ -82,7 +82,7 @@ module.exports = {
         "dark-tremor": {
           brand: {
             muted: "hsl(var(--muted-foreground))", // blue-950
-            subtle: "hsl(var(--primary-foreground))", // blue-800
+            subtle: "hsla(346.8, 77.2%, 49.8%, 25%)", // blue-800
             DEFAULT: "hsl(var(--primary))",
             emphasis: "hsl(var(--accent-foreground))", // blue-400
             inverted: "hsl(var(--primary-foreground))", // gray-950

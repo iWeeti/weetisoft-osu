@@ -23,6 +23,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { trpc } from "~/utils/api";
 import { Card, Flex, LineChart, Text, Title, Tracker } from "@tremor/react";
+import { UserSearch } from "../user-search";
 
 export function BaseLayout({ children }: { children: ReactNode }) {
   const { data, status } = useSession();
@@ -33,14 +34,16 @@ export function BaseLayout({ children }: { children: ReactNode }) {
         <nav className="container flex flex-none items-center justify-between gap-4 ">
           <div className="flex items-center gap-10">
             <Link href="/" className="text-2xl font-bold tracking-tight">
-              Auto Host Rotate
+              <span className="block md:hidden">AHR</span>
+              <span className="md:inline-block hidden">Auto Host Rotate</span>
             </Link>
-            <div className="flex items-center gap-4 text-muted-foreground">
+            <div className="hidden md:flex items-center gap-4 text-muted-foreground">
               <Link href="/games">Games</Link>
               <Link href="/commands">Commands</Link>
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <UserSearch />
             <ModeToggle />
             {status === "authenticated" && data && (
               <DropdownMenu>
@@ -132,7 +135,7 @@ export function BaseLayout({ children }: { children: ReactNode }) {
                           style: "percent",
                         }).format(d / 100)} (${new Date(
                           botStatus.results.A?.frames[0]?.data.values[0]?.[i] ??
-                            0,
+                          0,
                         ).toLocaleString()})`,
                       }),
                     ) ?? []
