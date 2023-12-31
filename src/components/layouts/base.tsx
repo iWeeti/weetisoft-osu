@@ -45,7 +45,7 @@ export function BaseLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-4">
             <UserSearch />
             <ModeToggle />
-            {status === "authenticated" && data && (
+            {/* {status === "authenticated" && data && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
@@ -79,7 +79,7 @@ export function BaseLayout({ children }: { children: ReactNode }) {
               <Button size="icon" variant="outline" onClick={() => signIn()}>
                 <LogInIcon className="h-4 w-4" />
               </Button>
-            )}
+            )} */}
           </div>
         </nav>
       </div>
