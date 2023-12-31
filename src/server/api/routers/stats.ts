@@ -1,7 +1,6 @@
 import axios from "axios";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
-import dayjs from "dayjs";
 
 export const statsRouter = createTRPCRouter({
   connected: publicProcedure.query(async ({ ctx }) => {
