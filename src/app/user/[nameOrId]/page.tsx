@@ -5,7 +5,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { osuLegacy } from "~/lib/osu";
 import { db } from "~/server/db";
-import { scores } from "~/server/db/schema";
+import { scores, users } from "~/server/db/schema";
 import { UserTabs } from "./tabs";
 import Link from "next/link";
 import { getRankName } from "~/lib/rank";
@@ -78,6 +78,19 @@ export default async function ProfilePage({
     rank: scores.rank
   }).from(scores).groupBy(scores.rank).where(eq(scores.userId, user.id));
 
+  const sq = db.select({
+    userId: users.id,
+    matchesRank: sql<number>`RANK() OVER (ORDER BY ${users.matchesPlayed} DESC)`.as("matchesRank"),
+    firstsRank: sql<number>`RANK() OVER (ORDER BY ${users.numberOneResults} DESC)`.as("firstsRank"),
+    playtimeRank: sql<number>`RANK() OVER (ORDER BY ${users.playtime} DESC)`.as("playtimeRank"),
+  }).from(users).as('sq');
+
+  const [ranks] = await db.select({
+    matchesRank: sq.matchesRank,
+    firstsRank: sq.firstsRank,
+    playtimeRank: sq.playtimeRank,
+  }).from(users).leftJoin(sq, eq(users.id, sq.userId)).where(eq(users.id, user.id));
+
   const playtimeFormat = new Intl.NumberFormat("en-US", {
     style: "unit",
     unit: "hour",
@@ -120,23 +133,24 @@ export default async function ProfilePage({
           <Text>
             Playtime
           </Text>
-          <Metric>
-            {playtimeFormat.format(user.playtime / 3600)}
+          <Metric className="w-full flex items-center justify-between">
+            <span>{playtimeFormat.format(user.playtime / 3600)}</span>
+            {ranks && (<span className="text-muted-foreground ml-auto">#{ranks.playtimeRank}</span>)}
           </Metric>
         </Card>
         <Card className="h-24 md:w-1/3" decoration="left">
           <Text>
             Matches Played
           </Text>
-          <Metric>
-            {unitFormat.format(user.matchesPlayed)}
+          <Metric className="w-full flex items-center justify-between">
+            <span>{unitFormat.format(user.matchesPlayed)}</span> {ranks && (<span className="text-muted-foreground ml-auto">#{ranks.matchesRank}</span>)}
           </Metric>
         </Card>
         <Card className="h-24 md:w-1/3" decoration="left">
           <Text>
             Number 1 Results
           </Text>
-          <Metric>
+          <Metric className="w-full flex items-center justify-between"><span>
             {unitFormat.format(user.numberOneResults)}
             <span className="ml-2 text-lg text-muted-foreground">
               (
@@ -144,7 +158,8 @@ export default async function ProfilePage({
                 user.numberOneResults / user.matchesPlayed,
               )}
               )
-            </span>
+            </span></span>
+            {ranks && (<span className="text-muted-foreground ml-auto">#{ranks.firstsRank}</span>)}
           </Metric>
         </Card>
       </div>
