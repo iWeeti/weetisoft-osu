@@ -40,6 +40,8 @@ export function BaseLayout({ children }: { children: ReactNode }) {
             <div className="hidden md:flex items-center gap-4 text-muted-foreground">
               <Link href="/games">Games</Link>
               <Link href="/commands">Commands</Link>
+              <Link href="/leaderboard/matches/0">Matches Played Leaderboard</Link>
+              <Link href="/leaderboard/firsts/0">#1 Results Leaderboard</Link>
             </div>
           </div>
           <div className="flex items-center gap-4">
