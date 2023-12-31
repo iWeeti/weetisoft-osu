@@ -1,4 +1,4 @@
-import { BarList, Bold, Card, DonutChart, Flex, Text, Title } from "@tremor/react";
+import { BarChart, BarList, Card, DonutChart, Metric, Text, Title } from "@tremor/react";
 import { desc, eq, sql } from "drizzle-orm";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { db } from "~/server/db";
 import { scores } from "~/server/db/schema";
 import { UserTabs } from "./tabs";
 import Link from "next/link";
+import { getRankName } from "~/lib/rank";
 
 export const revalidate = 0;
 
@@ -115,21 +116,27 @@ export default async function ProfilePage({
       </Link>
       <hr className="my-5" />
       <div className="flex items-center gap-5 max-md:flex-col max-md:items-stretch">
-        <div className="h-24 md:w-1/3 space-y-1 rounded-sm bg-secondary p-3">
-          <p className="text-sm text-muted-foreground">Playtime</p>
-          <p className="text-4xl font-bold tracking-tight text-foreground">
+        <Card className="h-24 md:w-1/3" decoration="left">
+          <Text>
+            Playtime
+          </Text>
+          <Metric>
             {playtimeFormat.format(user.playtime / 3600)}
-          </p>
-        </div>
-        <div className="h-24 md:w-1/3 space-y-1 rounded-sm bg-secondary p-3">
-          <p className="text-sm text-muted-foreground">Matches Played</p>
-          <p className="text-4xl font-bold tracking-tight text-foreground">
+          </Metric>
+        </Card>
+        <Card className="h-24 md:w-1/3" decoration="left">
+          <Text>
+            Matches Played
+          </Text>
+          <Metric>
             {unitFormat.format(user.matchesPlayed)}
-          </p>
-        </div>
-        <div className="h-24 md:w-1/3 space-y-1 rounded-sm bg-secondary p-3">
-          <p className="text-sm text-muted-foreground">Number 1 Results</p>
-          <p className="text-4xl font-bold tracking-tight text-foreground">
+          </Metric>
+        </Card>
+        <Card className="h-24 md:w-1/3" decoration="left">
+          <Text>
+            Number 1 Results
+          </Text>
+          <Metric>
             {unitFormat.format(user.numberOneResults)}
             <span className="ml-2 text-lg text-muted-foreground">
               (
@@ -138,40 +145,26 @@ export default async function ProfilePage({
               )}
               )
             </span>
-          </p>
-        </div>
+          </Metric>
+        </Card>
       </div>
       <hr className="my-5" />
-      <Card className="space-y-2">
+      <Card decoration="left" className="space-y-2">
         <Title>
           Rank Distribution
         </Title>
-        <DonutChart
-          data={rankCounts.map((d) => ({
+        <BarList
+          data={rankCounts.sort((a, b) => a.rank - b.rank).map((d) => ({
             name: getRankName(d.rank as any),
-            count: d.count
+            value: d.count
           }))} 
-          index="name"
-          category="count"
-          colors={["gray", "red", "yellow", "green", "blue", "yellow", "sky"]}
+          // index="name"
+          // category="count"
+          // colors={["gray", "red", "yellow", "green", "blue", "yellow", "sky"]}
         />
       </Card>
       <hr className="my-5" />
       <UserTabs userId={user.id} />
     </div>
   );
-}
-
-const ranks = {
-  1: "F",
-  2: "D",
-  3: "C",
-  4: "B",
-  5: "A",
-  6: "S",
-  7: "SS"
-};
-
-function getRankName(rank: keyof typeof ranks): string {
-  return ranks?.[rank] ?? "N/A"
 }

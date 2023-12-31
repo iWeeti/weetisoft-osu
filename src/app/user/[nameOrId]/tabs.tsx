@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { getRankName } from "~/lib/rank";
 import { trpc } from "~/utils/api";
 
 export function UserTabs({ userId }: { userId: number }) {
@@ -15,12 +16,6 @@ export function UserTabs({ userId }: { userId: number }) {
     });
     const { data: recent } = trpc.user.recentScores.useQuery({ userId, limit }, {
         enabled: tab === "recent"
-    });
-    const playtimeFormat = new Intl.NumberFormat("en-US", {
-        style: "unit",
-        unit: "hour",
-        unitDisplay: "long",
-        maximumFractionDigits: 1,
     });
 
     const unitFormat = new Intl.NumberFormat("en-US", {
@@ -55,6 +50,8 @@ export function UserTabs({ userId }: { userId: number }) {
                         {(top5 ?? []).map((score) => {
                             const { beatmap } = score;
 
+                            const timestamp = new Date(score.time).toLocaleString();
+
                             return (
                                 <li
                                     className="flex h-64 rounded-sm border p-3 shadow"
@@ -69,23 +66,23 @@ export function UserTabs({ userId }: { userId: number }) {
                                 >
                                     <div className="flex flex-col">
                                         <Link
-                                            href={`https://osu.ppy.sh/b/${beatmap?.beatmapId}#osu/${beatmap?.beatmapSetId}`}
+                                            href={`https://osu.ppy.sh/b/${score?.beatmapId}#osu/${beatmap?.beatmapSetId}`}
                                             target={"_blank"}
                                             className="flex-none hover:underline text-white"
                                         >
-                                            {beatmap?.beatmapName ?? "Unable to load"}
+                                            {beatmap?.beatmapName ?? "N/A"}
                                         </Link>
                                         <time className="flex-none text-sm text-muted-foreground">
                                             {new Intl.DateTimeFormat("en-US", {
                                                 dateStyle: "medium",
                                                 timeStyle: "medium",
-                                            }).format(new Date(score.time))}
+                                            }).format(new Date(`${score.time}+1`))}
                                             {" • "}
                                             {new Intl.RelativeTimeFormat("en-US", {
                                                 numeric: "auto",
                                             }).format(
                                                 Math.floor(
-                                                    (new Date(score.time).getTime() - Date.now()) / 1000 / 60 / 60,
+                                                    (new Date(`${score.time}+1`).getTime() - Date.now()) / 1000 / 60 / 60,
                                                 ),
                                                 "hour",
                                             )}
@@ -99,7 +96,7 @@ export function UserTabs({ userId }: { userId: number }) {
                                             <p className="text-lg text-muted-foreground">{unitFormat.format(score.maxCombo)}x</p>
 
                                             <div className="h-4 w-px border border-muted-foreground"></div>
-                                            <p className="text-lg text-muted-foreground">Placed #{unitFormat.format(score.rank)} <span className="hidden md:inline-block"> in the lobby</span></p>
+                                            <p className="text-lg text-muted-foreground">{getRankName(score.rank as any)}</p>
                                         </div>
                                     </div>
                                     <div className="ml-auto hidden md:flex flex-col">
@@ -154,23 +151,23 @@ export function UserTabs({ userId }: { userId: number }) {
                                 >
                                     <div className="flex flex-col">
                                         <Link
-                                            href={`https://osu.ppy.sh/b/${beatmap?.beatmapId}#osu/${beatmap?.beatmapSetId}`}
+                                            href={`https://osu.ppy.sh/b/${score?.beatmapId}#osu/${beatmap?.beatmapSetId}`}
                                             target={"_blank"}
                                             className="flex-none hover:underline text-white"
                                         >
-                                            {beatmap?.beatmapName ?? "Unable to load"}
+                                            {beatmap?.beatmapName ?? "N/A"}
                                         </Link>
                                         <time className="flex-none text-sm text-muted-foreground">
                                             {new Intl.DateTimeFormat("en-US", {
                                                 dateStyle: "medium",
                                                 timeStyle: "medium",
-                                            }).format(new Date(score.time))}
+                                            }).format(new Date(`${score.time}+1`))}
                                             {" • "}
                                             {new Intl.RelativeTimeFormat("en-US", {
                                                 numeric: "auto",
                                             }).format(
                                                 Math.floor(
-                                                    (new Date(score.time).getTime() - Date.now()) / 1000 / 60 / 60,
+                                                    (new Date(`${score.time}+1`).getTime() - Date.now()) / 1000 / 60 / 60,
                                                 ),
                                                 "hour",
                                             )}
@@ -184,7 +181,8 @@ export function UserTabs({ userId }: { userId: number }) {
                                             <p className="text-lg text-muted-foreground">{unitFormat.format(score.maxCombo)}x</p>
 
                                             <div className="h-4 w-px border border-muted-foreground"></div>
-                                            <p className="text-lg text-muted-foreground">Placed #{unitFormat.format(score.rank)} <span className="hidden md:inline-block"> in the lobby</span></p>
+
+                                            <p className="text-lg text-muted-foreground">{getRankName(score.rank as any)}</p>
                                         </div>
                                     </div>
                                     <div className="ml-auto hidden md:flex flex-col">
