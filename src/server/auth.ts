@@ -50,10 +50,10 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: DrizzleAdapter(db, sqliteTable),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
+    ...(!env.DISCORD_CLIENT_ID && !env.DISCORD_CLIENT_SECRET ? [] : [DiscordProvider({
+      clientId: env.DISCORD_CLIENT_ID!,
+      clientSecret: env.DISCORD_CLIENT_SECRET!,
+    })]),
     OsuProvider({
       clientId: env.OSU_CLIENT_ID,
       clientSecret: env.OSU_CLIENT_SECRET,
