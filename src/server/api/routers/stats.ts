@@ -49,7 +49,7 @@ export const statsRouter = createTRPCRouter({
           {
             datasource: {
               type: "prometheus",
-              uid: "a61009fc-c749-4dfc-9df8-b7182e53e12b",
+              uid: env.GRAFANA_DATASOURCE,
             },
             editorMode: "code",
             expr: "(IsConnected * up)",
@@ -64,7 +64,7 @@ export const statsRouter = createTRPCRouter({
           {
             datasource: {
               type: "prometheus",
-              uid: "a61009fc-c749-4dfc-9df8-b7182e53e12b",
+              uid: env.GRAFANA_DATASOURCE,
             },
             editorMode: "code",
             expr: "avg_over_time((sum((up AND IsConnected) OR on() vector(1)))[30d:1m]) * 100",
