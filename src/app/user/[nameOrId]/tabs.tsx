@@ -6,6 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { getRankName } from "~/lib/rank";
 import { trpc } from "~/utils/api";
+import dayjs from 'dayjs';
+import RelativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(RelativeTime);
 
 export function UserTabs({ userId }: { userId: number }) {
     const [tab, setTab] = useState<string>("top-5");
@@ -50,7 +53,8 @@ export function UserTabs({ userId }: { userId: number }) {
                         {(top5 ?? []).map((score) => {
                             const { beatmap } = score;
 
-                            const timestamp = new Date(score.time).toLocaleString();
+                            const timestamp = dayjs(`${score.time}+1`).toDate().toLocaleString();
+                            const relative = dayjs(`${score.time}+1`).fromNow()
 
                             return (
                                 <li
@@ -73,19 +77,7 @@ export function UserTabs({ userId }: { userId: number }) {
                                             {beatmap?.beatmapName ?? "N/A"}
                                         </Link>
                                         <time className="flex-none text-sm text-muted-foreground">
-                                            {new Intl.DateTimeFormat("en-US", {
-                                                dateStyle: "medium",
-                                                timeStyle: "medium",
-                                            }).format(new Date(`${score.time}+1`))}
-                                            {" • "}
-                                            {new Intl.RelativeTimeFormat("en-US", {
-                                                numeric: "auto",
-                                            }).format(
-                                                Math.floor(
-                                                    (new Date(`${score.time}+1`).getTime() - Date.now()) / 1000 / 60 / 60,
-                                                ),
-                                                "hour",
-                                            )}
+                                            {timestamp} • {relative}
                                         </time>
                                         <div className="flex-1"></div>
                                         <div className="flex flex-none items-center gap-2">
@@ -137,6 +129,9 @@ export function UserTabs({ userId }: { userId: number }) {
                         {(recent ?? []).map((score) => {
                             const { beatmap } = score;
 
+                            const timestamp = dayjs(`${score.time}+1`).toDate().toLocaleString();
+                            const relative = dayjs(`${score.time}+1`).fromNow()
+
                             return (
                                 <li
                                     className="flex h-64 rounded-sm border p-3 shadow"
@@ -158,19 +153,7 @@ export function UserTabs({ userId }: { userId: number }) {
                                             {beatmap?.beatmapName ?? "N/A"}
                                         </Link>
                                         <time className="flex-none text-sm text-muted-foreground">
-                                            {new Intl.DateTimeFormat("en-US", {
-                                                dateStyle: "medium",
-                                                timeStyle: "medium",
-                                            }).format(new Date(`${score.time}+1`))}
-                                            {" • "}
-                                            {new Intl.RelativeTimeFormat("en-US", {
-                                                numeric: "auto",
-                                            }).format(
-                                                Math.floor(
-                                                    (new Date(`${score.time}+1`).getTime() - Date.now()) / 1000 / 60 / 60,
-                                                ),
-                                                "hour",
-                                            )}
+                                            {timestamp} • {relative}
                                         </time>
                                         <div className="flex-1"></div>
                                         <div className="flex flex-none items-center gap-2">

@@ -2,15 +2,26 @@
 
 import { StarIcon } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { type games } from "~/server/db/schema";
 import { trpc } from "~/utils/api";
+import dayjs from 'dayjs';
+import RelativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(RelativeTime);
 
 export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
+  const [relativeTime, setRelativeTime] = useState<string | undefined>();
+  const [gameTime, setGameTime] = useState<string | undefined>();
   const { data: beatmap, isLoading: isLoadingBeatmap } =
     trpc.games.getBeatmap.useQuery({
       id: game.beatmapId,
     });
+
+  useEffect(() => {
+    setRelativeTime(dayjs(`${game.time}+1`).fromNow());
+    setGameTime(dayjs(`${game.time}+1`).toDate().toLocaleString());
+  }, [])
 
   if (isLoadingBeatmap) {
     return <GameEntrySkeleton />;
@@ -40,19 +51,7 @@ export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
           {beatmap.title}
         </Link>
         <time className="flex-none text-sm text-muted-foreground">
-          {new Intl.DateTimeFormat("en-US", {
-            dateStyle: "medium",
-            timeStyle: "medium",
-          }).format(new Date(game.time))}
-          {" • "}
-          {new Intl.RelativeTimeFormat("en-US", {
-            numeric: "auto",
-          }).format(
-            Math.floor(
-              (new Date(game.time).getTime() - Date.now()) / 1000 / 60 / 60,
-            ),
-            "hour",
-          )}
+          {gameTime} • {relativeTime}
         </time>
         <div className="flex-1"></div>
         <div className="flex flex-none items-center gap-2">
