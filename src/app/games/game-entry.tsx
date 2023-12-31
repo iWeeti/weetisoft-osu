@@ -8,6 +8,7 @@ import { type games } from "~/server/db/schema";
 import { trpc } from "~/utils/api";
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
+import { env } from "~/env.mjs";
 dayjs.extend(RelativeTime);
 
 export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
@@ -19,8 +20,8 @@ export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
     });
 
   useEffect(() => {
-    setRelativeTime(dayjs(`${game.time}+1`).fromNow());
-    setGameTime(dayjs(`${game.time}+1`).toDate().toLocaleString());
+    setRelativeTime(dayjs(`${game.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).fromNow());
+    setGameTime(dayjs(`${game.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).toDate().toLocaleString());
   }, [])
 
   if (isLoadingBeatmap) {

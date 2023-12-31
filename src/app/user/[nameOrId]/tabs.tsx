@@ -8,6 +8,7 @@ import { getRankName } from "~/lib/rank";
 import { trpc } from "~/utils/api";
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
+import { env } from "~/env.mjs";
 dayjs.extend(RelativeTime);
 
 export function UserTabs({ userId }: { userId: number }) {
@@ -53,8 +54,8 @@ export function UserTabs({ userId }: { userId: number }) {
                         {(top5 ?? []).map((score) => {
                             const { beatmap } = score;
 
-                            const timestamp = dayjs(`${score.time}+1`).toDate().toLocaleString();
-                            const relative = dayjs(`${score.time}+1`).fromNow()
+                            const timestamp = dayjs(`${score.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).toDate().toLocaleString();
+                            const relative = dayjs(`${score.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).fromNow()
 
                             return (
                                 <li
@@ -129,8 +130,8 @@ export function UserTabs({ userId }: { userId: number }) {
                         {(recent ?? []).map((score) => {
                             const { beatmap } = score;
 
-                            const timestamp = dayjs(`${score.time}+1`).toDate().toLocaleString();
-                            const relative = dayjs(`${score.time}+1`).fromNow()
+                            const timestamp = dayjs(`${score.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).toDate().toLocaleString();
+                            const relative = dayjs(`${score.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).fromNow()
 
                             return (
                                 <li

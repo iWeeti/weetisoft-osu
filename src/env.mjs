@@ -45,6 +45,7 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
     NEXT_PUBLIC_BASE_URL: z.string().url(),
     NEXT_PUBLIC_POSTHOG_TOKEN: z.string().optional(),
+    NEXT_PUBLIC_TIMEZONE_OFFSET: z.string().optional(),
   },
 
   /**
@@ -67,6 +68,7 @@ export const env = createEnv({
     GRAFANA_API_KEY: process.env.GRAFANA_API_KEY,
     GRAFANA_DATASOURCE: process.env.GRAFANA_DATASOURCE,
     NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
+    NEXT_PUBLIC_TIMEZONE_OFFSET: process.env.NEXT_PUBLIC_TIMEZONE_OFFSET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
