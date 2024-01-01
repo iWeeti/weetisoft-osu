@@ -17,6 +17,8 @@ import { scores, users } from "~/server/db/schema";
 import { UserTabs } from "./tabs";
 import Link from "next/link";
 import { getRankName } from "~/lib/rank";
+import { env } from "~/env.mjs";
+import { getAlgoliaAdminClient } from "~/lib/algolia";
 
 export const revalidate = 0;
 
@@ -90,6 +92,21 @@ export default async function ProfilePage({
 
   if (!user) {
     notFound();
+  }
+
+  if (env.NEXT_PUBLIC_ALGOLIA_ENABLED) {
+    const algolia = getAlgoliaAdminClient();
+    const index = algolia.initIndex("users");
+
+    await index.saveObject({
+      objectID: user.id,
+      name: user.name,
+      userId: osuUser.user_id,
+      image: `https://a.ppy.sh/${osuUser.user_id}?.png`,
+      matchesPlayed: user.matchesPlayed,
+      numberOneResults: user.numberOneResults,
+      playtime: user.playtime,
+    });
   }
 
   const rankCounts = await db

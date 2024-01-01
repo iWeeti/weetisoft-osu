@@ -34,6 +34,8 @@ export const env = createEnv({
     GRAFANA_URL: z.string().url(),
     GRAFANA_API_KEY: z.string(),
     GRAFANA_DATASOURCE: z.string(),
+
+    ALGOLIA_ADMIN_KEY: z.string().optional(),
   },
 
   /**
@@ -46,6 +48,9 @@ export const env = createEnv({
     NEXT_PUBLIC_BASE_URL: z.string().url(),
     NEXT_PUBLIC_POSTHOG_TOKEN: z.string().optional(),
     NEXT_PUBLIC_TIMEZONE_OFFSET: z.string().optional(),
+    NEXT_PUBLIC_ALGOLIA_APP_ID: z.string().optional(),
+    NEXT_PUBLIC_ALGOLIA_ENABLED: z.boolean({ coerce: true }).optional(),
+    NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: z.string().optional(),
   },
 
   /**
@@ -69,6 +74,10 @@ export const env = createEnv({
     GRAFANA_DATASOURCE: process.env.GRAFANA_DATASOURCE,
     NEXT_PUBLIC_POSTHOG_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_TOKEN,
     NEXT_PUBLIC_TIMEZONE_OFFSET: process.env.NEXT_PUBLIC_TIMEZONE_OFFSET,
+    NEXT_PUBLIC_ALGOLIA_ENABLED: process.env.NEXT_PUBLIC_ALGOLIA_ENABLED,
+    NEXT_PUBLIC_ALGOLIA_APP_ID: process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+    ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
+    NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
