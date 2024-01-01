@@ -218,7 +218,7 @@ export default async function ProfilePage({
       </div>
       <hr className="my-5" />
       <Card decoration="left" className="space-y-2">
-        <Title>Rank Distribution</Title>
+        <Title>Grade Distribution</Title>
         <BarList
           data={rankCounts
             .sort((a, b) => b.rank - a.rank)

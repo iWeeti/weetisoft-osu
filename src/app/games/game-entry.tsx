@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { type games } from "~/server/db/schema";
 import { trpc } from "~/utils/api";
-import dayjs from 'dayjs';
-import RelativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from "dayjs";
+import RelativeTime from "dayjs/plugin/relativeTime";
 import { env } from "~/env.mjs";
 dayjs.extend(RelativeTime);
 
@@ -20,9 +20,15 @@ export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
     });
 
   useEffect(() => {
-    setRelativeTime(dayjs(`${game.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).fromNow());
-    setGameTime(dayjs(`${game.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).toDate().toLocaleString());
-  }, [])
+    setRelativeTime(
+      dayjs(`${game.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`).fromNow(),
+    );
+    setGameTime(
+      dayjs(`${game.time}${env.NEXT_PUBLIC_TIMEZONE_OFFSET ?? "+1"}`)
+        .toDate()
+        .toLocaleString(),
+    );
+  }, []);
 
   if (isLoadingBeatmap) {
     return <GameEntrySkeleton />;
@@ -45,7 +51,7 @@ export function GameEntry({ game }: { game: typeof games.$inferSelect }) {
     >
       <div className="flex flex-col">
         <Link
-          href={`https://osu.ppy.sh/b/${beatmap.beatmap_id}#osu/${beatmap.beatmapset_id}`}
+          href={`/beatmap/${beatmap.beatmap_id}#osu/${beatmap.beatmapset_id}`}
           target={"_blank"}
           className="flex-none hover:underline"
         >
