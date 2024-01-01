@@ -1,4 +1,12 @@
-import { BarChart, BarList, Card, DonutChart, Metric, Text, Title } from "@tremor/react";
+import {
+  BarChart,
+  BarList,
+  Card,
+  DonutChart,
+  Metric,
+  Text,
+  Title,
+} from "@tremor/react";
 import { desc, eq, sql } from "drizzle-orm";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
@@ -12,8 +20,14 @@ import { getRankName } from "~/lib/rank";
 
 export const revalidate = 0;
 
-export async function generateMetadata({ params }: { params: { nameOrId: string } }, parent: ResolvingMetadata): Promise<Metadata> {
-  const osuUser = await osuLegacy.getUser({ u: decodeURIComponent(params.nameOrId), m: "osu" });
+export async function generateMetadata(
+  { params }: { params: { nameOrId: string } },
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const osuUser = await osuLegacy.getUser({
+    u: decodeURIComponent(params.nameOrId),
+    m: "osu",
+  });
 
   if (!osuUser) {
     notFound();
@@ -25,10 +39,10 @@ export async function generateMetadata({ params }: { params: { nameOrId: string 
         orderBy: desc(scores.totalScore),
         limit: 5,
         with: {
-          beatmap: true
-        }
+          beatmap: true,
+        },
       },
-    }
+    },
   });
 
   if (!user) {
@@ -49,8 +63,10 @@ export async function generateMetadata({ params }: { params: { nameOrId: string 
 
   return {
     title: `${osuUser.username}'s Statistics`,
-    description: `${unitFormat.format(user.matchesPlayed)} matches played, ${playtimeFormat.format(user.playtime / 3600)} playtime`
-  }
+    description: `${unitFormat.format(
+      user.matchesPlayed,
+    )} matches played, ${playtimeFormat.format(user.playtime / 3600)} playtime`,
+  };
 }
 
 export default async function ProfilePage({
@@ -58,7 +74,10 @@ export default async function ProfilePage({
 }: {
   params: { nameOrId: string };
 }) {
-  const osuUser = await osuLegacy.getUser({ u: decodeURIComponent(params.nameOrId), m: "osu" });
+  const osuUser = await osuLegacy.getUser({
+    u: decodeURIComponent(params.nameOrId),
+    m: "osu",
+  });
 
   if (!osuUser) {
     notFound();
@@ -73,23 +92,43 @@ export default async function ProfilePage({
     notFound();
   }
 
-  const rankCounts = await db.select({
-    count: sql<number>`count(${scores.userId})`,
-    rank: scores.rank
-  }).from(scores).groupBy(scores.rank).where(eq(scores.userId, user.id));
+  const rankCounts = await db
+    .select({
+      count: sql<number>`count(${scores.userId})`,
+      rank: scores.rank,
+    })
+    .from(scores)
+    .groupBy(scores.rank)
+    .where(eq(scores.userId, user.id));
 
-  const sq = db.select({
-    userId: users.id,
-    matchesRank: sql<number>`RANK() OVER (ORDER BY ${users.matchesPlayed} DESC)`.as("matchesRank"),
-    firstsRank: sql<number>`RANK() OVER (ORDER BY ${users.numberOneResults} DESC)`.as("firstsRank"),
-    playtimeRank: sql<number>`RANK() OVER (ORDER BY ${users.playtime} DESC)`.as("playtimeRank"),
-  }).from(users).as('sq');
+  const sq = db
+    .select({
+      userId: users.id,
+      matchesRank:
+        sql<number>`RANK() OVER (ORDER BY ${users.matchesPlayed} DESC)`.as(
+          "matchesRank",
+        ),
+      firstsRank:
+        sql<number>`RANK() OVER (ORDER BY ${users.numberOneResults} DESC)`.as(
+          "firstsRank",
+        ),
+      playtimeRank:
+        sql<number>`RANK() OVER (ORDER BY ${users.playtime} DESC)`.as(
+          "playtimeRank",
+        ),
+    })
+    .from(users)
+    .as("sq");
 
-  const [ranks] = await db.select({
-    matchesRank: sq.matchesRank,
-    firstsRank: sq.firstsRank,
-    playtimeRank: sq.playtimeRank,
-  }).from(users).leftJoin(sq, eq(users.id, sq.userId)).where(eq(users.id, user.id));
+  const [ranks] = await db
+    .select({
+      matchesRank: sq.matchesRank,
+      firstsRank: sq.firstsRank,
+      playtimeRank: sq.playtimeRank,
+    })
+    .from(users)
+    .leftJoin(sq, eq(users.id, sq.userId))
+    .where(eq(users.id, user.id));
 
   const playtimeFormat = new Intl.NumberFormat("en-US", {
     style: "unit",
@@ -118,61 +157,75 @@ export default async function ProfilePage({
 
   return (
     <div>
-      <Link href={`https://osu.ppy.sh/users/${osuUser.user_id}`} className="flex items-center gap-5">
+      <Link
+        href={`https://osu.ppy.sh/users/${osuUser.user_id}`}
+        className="flex items-center gap-5"
+      >
         <Image
           src={`https://a.ppy.sh/${osuUser.user_id}?.png`}
           width={64}
           height={64}
           alt={osuUser.username}
         />
-        <h1 className="text-2xl font-bold tracking-tight">{osuUser.username}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {osuUser.username}
+        </h1>
       </Link>
       <hr className="my-5" />
       <div className="flex items-center gap-5 max-md:flex-col max-md:items-stretch">
         <Card className="h-24 md:w-1/3" decoration="left">
-          <Text>
-            Playtime
-          </Text>
+          <Text>Playtime</Text>
           <Metric className="w-full flex items-center justify-between">
             <span>{playtimeFormat.format(user.playtime / 3600)}</span>
-            {ranks && (<span className="text-muted-foreground ml-auto">#{ranks.playtimeRank}</span>)}
+            {ranks && (
+              <span className="text-muted-foreground ml-auto">
+                #{ranks.playtimeRank}
+              </span>
+            )}
           </Metric>
         </Card>
         <Card className="h-24 md:w-1/3" decoration="left">
-          <Text>
-            Matches Played
-          </Text>
+          <Text>Matches Played</Text>
           <Metric className="w-full flex items-center justify-between">
-            <span>{unitFormat.format(user.matchesPlayed)}</span> {ranks && (<span className="text-muted-foreground ml-auto">#{ranks.matchesRank}</span>)}
+            <span>{unitFormat.format(user.matchesPlayed)}</span>{" "}
+            {ranks && (
+              <span className="text-muted-foreground ml-auto">
+                #{ranks.matchesRank}
+              </span>
+            )}
           </Metric>
         </Card>
         <Card className="h-24 md:w-1/3" decoration="left">
-          <Text>
-            Number 1 Results
-          </Text>
-          <Metric className="w-full flex items-center justify-between"><span>
-            {unitFormat.format(user.numberOneResults)}
-            <span className="ml-2 text-lg text-muted-foreground">
-              (
-              {percentageFormat.format(
-                user.numberOneResults / user.matchesPlayed,
-              )}
-              )
-            </span></span>
-            {ranks && (<span className="text-muted-foreground ml-auto">#{ranks.firstsRank}</span>)}
+          <Text>Number 1 Results</Text>
+          <Metric className="w-full flex items-center justify-between">
+            <span>
+              {unitFormat.format(user.numberOneResults)}
+              <span className="ml-2 text-lg text-muted-foreground">
+                (
+                {percentageFormat.format(
+                  user.numberOneResults / user.matchesPlayed,
+                )}
+                )
+              </span>
+            </span>
+            {ranks && (
+              <span className="text-muted-foreground ml-auto">
+                #{ranks.firstsRank}
+              </span>
+            )}
           </Metric>
         </Card>
       </div>
       <hr className="my-5" />
       <Card decoration="left" className="space-y-2">
-        <Title>
-          Rank Distribution
-        </Title>
+        <Title>Rank Distribution</Title>
         <BarList
-          data={rankCounts.sort((a, b) => a.rank - b.rank).map((d) => ({
-            name: getRankName(d.rank as any),
-            value: d.count
-          }))} 
+          data={rankCounts
+            .sort((a, b) => b.rank - a.rank)
+            .map((d) => ({
+              name: getRankName(d.rank as any),
+              value: d.count,
+            }))}
           // index="name"
           // category="count"
           // colors={["gray", "red", "yellow", "green", "blue", "yellow", "sky"]}
