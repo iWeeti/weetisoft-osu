@@ -1,31 +1,24 @@
-import {
-  BarChart,
-  BarList,
-  Card,
-  DonutChart,
-  Metric,
-  Text,
-  Title,
-} from "@tremor/react";
+import { BarList, Card, Metric, Text, Title } from "@tremor/react";
 import { desc, eq, sql } from "drizzle-orm";
-import { Metadata, ResolvingMetadata } from "next";
+import { type Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { env } from "~/env.mjs";
+import { getAlgoliaAdminClient } from "~/lib/algolia";
 import { osuLegacy } from "~/lib/osu";
+import { getRankName } from "~/lib/rank";
 import { db } from "~/server/db";
 import { scores, users } from "~/server/db/schema";
 import { UserTabs } from "./tabs";
-import Link from "next/link";
-import { getRankName } from "~/lib/rank";
-import { env } from "~/env.mjs";
-import { getAlgoliaAdminClient } from "~/lib/algolia";
 
 export const revalidate = 0;
 
-export async function generateMetadata(
-  { params }: { params: { nameOrId: string } },
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { nameOrId: string };
+}): Promise<Metadata> {
   const osuUser = await osuLegacy.getUser({
     u: decodeURIComponent(params.nameOrId),
     m: "osu",
@@ -163,15 +156,6 @@ export default async function ProfilePage({
     maximumFractionDigits: 1,
   });
 
-  const timeFormat = new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "medium",
-  });
-
-  const relativeFormat = new Intl.RelativeTimeFormat("en-US", {
-    style: "long",
-  });
-
   return (
     <div>
       <Link
@@ -240,7 +224,7 @@ export default async function ProfilePage({
           data={rankCounts
             .sort((a, b) => b.rank - a.rank)
             .map((d) => ({
-              name: getRankName(d.rank as any),
+              name: getRankName(d.rank),
               value: d.count,
             }))}
           // index="name"
