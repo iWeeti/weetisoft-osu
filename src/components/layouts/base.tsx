@@ -24,6 +24,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { UserSearch } from "../user-search";
+import { env } from "~/env.mjs";
+// import {DiscordIcon} from 'lucide-react';
 
 export function BaseLayout({ children }: { children: ReactNode }) {
   const { data, status } = useSession();
@@ -40,13 +42,22 @@ export function BaseLayout({ children }: { children: ReactNode }) {
             <div className="hidden md:flex items-center gap-4 text-muted-foreground">
               <Link href="/games">Games</Link>
               <Link href="/commands">Commands</Link>
-              <Link href="/leaderboard/matches/0">Matches Played Leaderboard</Link>
+              <Link href="/leaderboard/matches/0">
+                Matches Played Leaderboard
+              </Link>
               <Link href="/leaderboard/firsts/0">#1 Results Leaderboard</Link>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <UserSearch />
             <ModeToggle />
+            {env.NEXT_PUBLIC_DISCORD_SERVER_INVITE && (
+              <Button asChild>
+                <Link href={env.NEXT_PUBLIC_DISCORD_SERVER_INVITE}>
+                  Discord
+                </Link>
+              </Button>
+            )}
             {/* {status === "authenticated" && data && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -137,7 +148,7 @@ export function BaseLayout({ children }: { children: ReactNode }) {
                           style: "percent",
                         }).format(d / 100)} (${new Date(
                           botStatus.results.A?.frames[0]?.data.values[0]?.[i] ??
-                          0,
+                            0,
                         ).toLocaleString()})`,
                       }),
                     ) ?? []

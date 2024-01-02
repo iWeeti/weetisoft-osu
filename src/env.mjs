@@ -51,6 +51,8 @@ export const env = createEnv({
     NEXT_PUBLIC_ALGOLIA_APP_ID: z.string().optional(),
     NEXT_PUBLIC_ALGOLIA_ENABLED: z.boolean({ coerce: true }).optional(),
     NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: z.string().optional(),
+    NEXT_PUBLIC_DISCORD_SERVER_INVITE: z.string().optional(),
+    NEXT_PUBLIC_DISCORD_SERVER_ID: z.string().optional(),
   },
 
   /**
@@ -78,6 +80,8 @@ export const env = createEnv({
     NEXT_PUBLIC_ALGOLIA_APP_ID: process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
     ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
     NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY,
+    NEXT_PUBLIC_DISCORD_SERVER_INVITE: process.env.NEXT_PUBLIC_DISCORD_SERVER_INVITE,
+    NEXT_PUBLIC_DISCORD_SERVER_ID: process.env.NEXT_PUBLIC_DISCORD_SERVER_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
