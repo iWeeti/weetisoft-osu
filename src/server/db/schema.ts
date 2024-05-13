@@ -67,10 +67,12 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const maps = sqliteTable("Maps", {
   id: integer("Id", {
-    mode: "number"
-  }).notNull().primaryKey({
-    autoIncrement: true,
-  }),
+    mode: "number",
+  })
+    .notNull()
+    .primaryKey({
+      autoIncrement: true,
+    }),
   beatmapId: integer("BeatmapId").notNull(),
   beatmapSetId: integer("BeatmapSetId").notNull(),
   beatmapName: text("BeatmapName").notNull(),
@@ -83,20 +85,24 @@ export const maps = sqliteTable("Maps", {
   lastPlayed: text("LastPlayed").notNull(),
 });
 
-export const mapsRelations = relations(maps, ({one, many}) => ({
-  scores: many(scores)
-}))
+export const mapsRelations = relations(maps, ({ one, many }) => ({
+  scores: many(scores),
+}));
 
 export const scores = sqliteTable("Scores", {
   id: integer("Id").notNull().primaryKey({
     autoIncrement: true,
   }),
-  userId: integer("UserId").notNull().references(() => users.id),
-  gameId: integer("gameId").notNull(),
+  userId: integer("UserId")
+    .notNull()
+    .references(() => users.id),
+  gameId: integer("GameId").notNull(),
   playerId: integer("PlayerId"),
   lobbyId: integer("LobbyId").notNull(),
   osuScoreId: integer("OsuScoreId"),
-  beatmapId: integer("BeatmapId").notNull().references(() => maps.beatmapId),
+  beatmapId: integer("BeatmapId")
+    .notNull()
+    .references(() => maps.beatmapId),
   totalScore: integer("TotalScore").notNull(),
   rank: integer("Rank").notNull(),
   maxCombo: integer("MaxCombo").notNull(),
@@ -108,16 +114,16 @@ export const scores = sqliteTable("Scores", {
   time: text("Time").notNull(),
 });
 
-export const scoresRelations = relations(scores, ({one}) => ({
+export const scoresRelations = relations(scores, ({ one }) => ({
   user: one(users, {
     fields: [scores.userId],
-    references: [users.id]
+    references: [users.id],
   }),
   beatmap: one(maps, {
     fields: [scores.beatmapId],
-    references: [maps.beatmapId]
-  })
-}))
+    references: [maps.beatmapId],
+  }),
+}));
 
 export const websiteUsers = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
