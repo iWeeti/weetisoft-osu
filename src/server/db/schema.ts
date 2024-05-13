@@ -28,11 +28,10 @@ export const playerBans = sqliteTable("PlayerBans", {
   active: integer("Active", { mode: "boolean" }).notNull(),
   userId: integer("UserId")
     .notNull()
-    .references(() => users.userId, {
+    .references(() => users.id, {
       onDelete: "cascade",
       onUpdate: "no action",
-    })
-    .unique(),
+    }),
   reason: text("Reason"),
   time: text("Time").notNull(),
   expire: text("Expire"),
@@ -42,7 +41,7 @@ export const playerBans = sqliteTable("PlayerBans", {
 export const playerBansRelations = relations(playerBans, ({ one }) => ({
   user: one(users, {
     fields: [playerBans.userId],
-    references: [users.userId],
+    references: [users.id],
   }),
 }));
 
