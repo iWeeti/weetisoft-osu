@@ -31,7 +31,8 @@ export const playerBans = sqliteTable("PlayerBans", {
     .references(() => users.userId, {
       onDelete: "cascade",
       onUpdate: "no action",
-    }),
+    })
+    .unique(),
   reason: text("Reason"),
   time: text("Time").notNull(),
   expire: text("Expire"),
